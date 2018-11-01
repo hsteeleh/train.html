@@ -12,11 +12,12 @@
 
 var dataRef = firebase.database();
 
+var time;
     
     // Capture Button Click
     $("#add-train-btn").on("click", function(event) {
       event.preventDefault();
-
+      
     
       // Code storing and retrieving the most recent user.
       // Don't forget to provide initial data to your Firebase database.
@@ -30,8 +31,8 @@ var dataRef = firebase.database();
       var newTrain = {
          train: train,
          destination: destination,
-         frequency: frequency,
-         time: Date.now(), 
+         frequency: "HH:mm:ss",
+         time: moment().format('LTS'), 
       }
 
       console.log('New train ====>', newTrain)
@@ -50,13 +51,13 @@ var dataRef = firebase.database();
     dataRef.ref().on("child_added" , function(childSnapshot) {
 
       // Log everything that's coming out of snapshot
-      console.log("Snapshot response ===>", childSnapshot.val())
-      // console.log(childSnapshot.val().train);
-      // console.log(childSnapshot.val().destination);
-      // console.log(childSnapshot.val().frequency);
-      // console.log(childSnapshot.val().time);
-      // console.log(childSnapshot.val().next);
-      // console.log(childSnapshot.val().minutesAway);
+      console.log("Snapshot response ===>", childSnapshot.val().train);
+      console.log(childSnapshot.val().train);
+      console.log(childSnapshot.val().destination);
+      console.log(childSnapshot.val().frequency);
+      console.log(childSnapshot.val().time);
+      console.log(childSnapshot.val().next);
+      console.log(childSnapshot.val().minutesAway);
       
 
       // full list of items to the well
@@ -73,17 +74,18 @@ var dataRef = firebase.database();
       //   childSnapshot.val().minutesAway +
       //   " </span></div>");
 
-      // Handle the errors
+      // dataRef.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+        // Change the HTML 
+        // console.log(snapshot.val().train);
+        $("#train").append(childSnapshot.val().train);
+        $("#destination").append(childSnapshot.val().destination);
+        $("#frequency").append(childSnapshot.val().frequency);
+        $("#time").append(childSnapshot.val().time);
+        $("#next").append(childSnapshot.val().next);
+        $("#minutesAway").append(childSnapshot.val().minutesAway);
+        
+      // });
     });
     
 
-    dataRef.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
-      // Change the HTML 
-      $("#train").text(snapshot.val().train);
-      $("#destination").text(snapshot.val().destination);
-      $("#frequency").text(snapshot.val().frequency);
-      $("#time").text(snapshot.val().time);
-      $("#next").text(snapshot.val().next);
-      $("#minutesAway").text(snapshot.val().minutesAway);
-      
-    });
+    
